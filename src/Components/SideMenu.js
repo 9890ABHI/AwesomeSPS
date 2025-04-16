@@ -1,16 +1,21 @@
 import {View, Text, Image, TouchableOpacity, Settings} from 'react-native';
 import React from 'react';
 import {COLORS, FONTS} from '../Assets/Theme';
+import {useDispatch} from 'react-redux';
+import {logout} from '../../store/actions';
 
 export const StudentSideMenu = ({navigation, user}) => {
-  const handleLogOut = () => {
-    dispatch(logout());
-    navigation.navigate('Login');
-  };
+  const dispatch = useDispatch();
 
   console.log('hell yeah', user);
 
   const user_name = user.user == null ? user.teacher.name : user.user.name;
+  const handleLogOut = () => {
+    dispatch(logout());
+    user.user == null
+      ? navigation.navigate('TeacherLogin')
+      : navigation.navigate('Login');
+  };
 
   console.log(user_name);
   return (
@@ -31,7 +36,12 @@ export const StudentSideMenu = ({navigation, user}) => {
             gap: 10,
             display: 'flex',
           }}>
-          <TouchableOpacity onPress={() => navigation.navigate('Student')}>
+          <TouchableOpacity
+            onPress={() =>
+              user.user == null
+                ? navigation.navigate('Teacher')
+                : navigation.navigate('Student')
+            }>
             <WideCard
               wideImage={
                 'https://cdn0.iconfinder.com/data/icons/seo-web-4-1/128/Vigor_User-Avatar-Profile-Photo-01-256.png'
@@ -40,7 +50,12 @@ export const StudentSideMenu = ({navigation, user}) => {
               underline_name={'Profile'}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Course')}>
+          <TouchableOpacity
+            onPress={() =>
+              user.user == null
+                ? navigation.navigate('ClassMangement')
+                : navigation.navigate('Course')
+            }>
             <WideCard
               wideImage={
                 'https://cdn2.iconfinder.com/data/icons/knowledge-is-power/60/books-256.png'
@@ -49,7 +64,12 @@ export const StudentSideMenu = ({navigation, user}) => {
               underline_name={'Courses'}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
+          <TouchableOpacity
+            onPress={() =>
+              user.user == null
+                ? navigation.navigate('Teacher')
+                : navigation.navigate('Student')
+            }>
             <WideCard
               wideImage={
                 'https://cdn4.iconfinder.com/data/icons/multimedia-75/512/multimedia-06-256.png'

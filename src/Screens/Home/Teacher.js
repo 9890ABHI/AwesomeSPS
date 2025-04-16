@@ -231,6 +231,7 @@ export const ClassMangement = ({navigation}) => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching courses:', error);
+
         setLoading(false);
       }
     };
@@ -251,7 +252,7 @@ export const ClassMangement = ({navigation}) => {
         );
       });
   };
-  const memoizedCourses = useMemo(() => courses, [courses]);
+  const memoizedCourses = useMemo(() => courses, [courses, refresh]);
   console.log('====================================');
   console.log('memoizedCourses', memoizedCourses);
   console.log('====================================');
@@ -504,9 +505,11 @@ export const CreateCourseScreen = ({navigation}) => {
     try {
       const response = await axios.post(`${BASEURL}api/courses`, courseData);
       console.log('Course created:', response.data);
+      Alert.alert('Course created');
       navigation.goBack();
     } catch (error) {
       console.error('Error creating course:', error.message);
+      Alert.alert('Error creating course:');
     }
   };
   // console.log('====================================');
@@ -543,7 +546,12 @@ export const CreateCourseScreen = ({navigation}) => {
 
   return (
     <>
-      <View>
+      <View
+        style={{
+          paddingHorizontal: 10,
+          gap: 10,
+          height: '100%',
+        }}>
         <View>
           {/* <Text>
           {teacherDetails.name}
@@ -556,6 +564,8 @@ export const CreateCourseScreen = ({navigation}) => {
             gap: 10,
             padding: 10,
             paddingHorizontal: 20,
+            borderRadius: 20,
+            paddingVertical: 10,
           }}>
           <Text
             style={{
@@ -604,26 +614,30 @@ export const CreateCourseScreen = ({navigation}) => {
             value={courseData.duration}
           />
         </View>
-        <View
+        {/* <View 
           style={{
             display: 'flex',
-            gap: 10,
+            // gap: 10,
+            height: '50%',
+          }}> */}
+        <ScrollView
+          style={{
+            display: 'flex',
             paddingHorizontal: 10,
+            gap: 10,
+            backgroundColor: COLORS.lightGray1,
+            borderRadius: 20,
+            paddingVertical: 10,
+            maxHeight: '65%',
           }}>
           <Text
             style={{
-              ...FONTS.h3,
+              ...FONTS.h2,
               color: COLORS.gray,
             }}>
             Select Techers:
           </Text>
-          <ScrollView
-            style={{
-              display: 'flex',
-              paddingHorizontal: 10,
-              gap: 10,
-            }}>
-            {/* {courseData.subjects.map(item => (
+          {/* {courseData.subjects.map(item => (
             <>
               <View key={item.id}>
                 <Text
@@ -636,129 +650,172 @@ export const CreateCourseScreen = ({navigation}) => {
               </View>
             </>
           ))} */}
-            {teacherDetails?.map((teacher, i) => (
-              <View
-                key={teacher._id}
+          {teacherDetails?.map((teacher, i) => (
+            <View
+              key={teacher._id}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                backgroundColor: COLORS.white,
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                borderRadius: 10,
+                marginVertical: 2,
+              }}>
+              <Text>{i + 1}</Text>
+              <Text
                 style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  backgroundColor: COLORS.white,
-                  paddingVertical: 5,
-                  paddingHorizontal: 10,
-                  borderRadius: 10,
-                  marginVertical: 2,
+                  ...FONTS.h3,
+                  color: COLORS.black,
+                  textTransform: 'capitalize',
                 }}>
-                <Text>{i + 1}</Text>
-                <Text
-                  style={{
-                    ...FONTS.h3,
-                    color: COLORS.black,
-                    textTransform: 'capitalize',
-                  }}>
-                  {teacher.name}
-                </Text>
-                <Text
-                  style={{
-                    ...FONTS.h3,
-                    color: COLORS.black,
-                    textTransform: 'capitalize',
-                  }}>
-                  {teacher.subject}
-                </Text>
+                {teacher.name.length > 10
+                  ? teacher.name.substring(0, 10) + '...'
+                  : teacher.name}
+              </Text>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  color: COLORS.black,
+                  textTransform: 'capitalize',
+                }}>
+                {/* {teacher.subject} */}
+                {/* {teacher.subject.length > 10
+                    ? teacher.subject.substring(0, 10) + '...'
+                    : teacher.subject} */}
+                {teacher.subject && teacher.subject.length > 10
+                  ? teacher.subject.substring(0, 10) + '...'
+                  : teacher.subject || ''}
+              </Text>
 
-                <View
-                  style={
-                    {
-                      // width:'30%'
-                    }
-                  }>
-                  <TouchableOpacity
-                    onPress={() =>
-                      handleTeacherSelection(teacher._id, teacher.subject)
-                    }>
-                    {courseData.subjects.some(
-                      subject => subject.teacherId === teacher._id,
-                    ) ? (
-                      // <Icon name={'add'} size={30} color={COLORS.green} />
-                      <Icon name={'delete'} size={30} color={COLORS.red} />
-                    ) : (
-                      // <Icon name={'delete'} size={30} color={COLORS.red} />
-                      <Icon name={'add'} size={30} color={COLORS.green} />
-                    )}
-                  </TouchableOpacity>
-                  {/* <Button
+              <View
+                style={
+                  {
+                    // width:'30%'
+                  }
+                }>
+                <TouchableOpacity
+                  onPress={() => {
+                    // console.log('something about teacher', teacher.subject);
+                    teacher.subject != null || ''
+                      ? handleTeacherSelection(teacher._id, teacher.subject)
+                      : Alert.alert('Please add subject for teacher ');
+                  }}>
+                  {courseData.subjects.some(
+                    subject => subject.teacherId === teacher._id,
+                  ) ? (
+                    <Text
+                      style={{
+                        ...FONTS.h3,
+                        color: COLORS.red,
+                        textTransform: 'capitalize',
+                      }}>
+                      Remove
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        ...FONTS.h3,
+                        color: COLORS.green,
+                        textTransform: 'capitalize',
+                      }}>
+                      Add
+                    </Text>
+                  )}
+                </TouchableOpacity>
+                {/* <Button
             title={courseData.subjects.includes(teacher._id) ? 'Remove' : 'Add'}
             onPress={() => handleTeacherSelection(teacher._id)}
           />
            */}
-                </View>
               </View>
-            ))}
-          </ScrollView>
+            </View>
+          ))}
+          {/* </ScrollView> */}
           {/* Display the list of students */}
           <Text
             style={{
-              ...FONTS.h3,
+              ...FONTS.h2,
               color: COLORS.gray,
+              paddingVertical: 5,
             }}>
             Select Students:
           </Text>
 
-          <ScrollView
+          {/* <ScrollView
             style={{
               display: 'flex',
               paddingHorizontal: 10,
               gap: 10,
-            }}>
-            {students.map((student, i) => (
-              <View
-                key={student._id}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  backgroundColor: COLORS.white,
-                  paddingVertical: 5,
-                  paddingHorizontal: 10,
+            }}> */}
+          {students.map((student, i) => (
+            <View
+              key={student._id}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                backgroundColor: COLORS.white,
+                paddingVertical: 5,
+                paddingHorizontal: 10,
 
-                  borderRadius: 10,
-                  marginVertical: 2,
+                borderRadius: 10,
+                marginVertical: 2,
+              }}>
+              <Text>{i + 1}</Text>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  color: COLORS.black,
+                  textTransform: 'capitalize',
                 }}>
-                <Text>{i + 1}</Text>
-                <Text
-                  style={{
-                    ...FONTS.h3,
-                    color: COLORS.black,
-                    textTransform: 'capitalize',
-                  }}>
-                  {student.name}
-                </Text>
-                <View
-                  style={
-                    {
-                      // width:'30%'
-                    }
-                  }>
-                  <TouchableOpacity
-                    onPress={() => handleStudentSelection(student._id)}>
-                    {!courseData.students.includes(student._id) ? (
-                      <Icon name={'add'} size={30} color={COLORS.green} />
-                    ) : (
-                      <Icon name={'delete'} size={30} color={COLORS.red} />
-                    )}
-                  </TouchableOpacity>
-                  {/* <Button
+                {/* {student.name} */}
+                {student.name.length > 10
+                  ? student.name.substring(0, 10) + '...'
+                  : student.name}
+              </Text>
+              <View
+                style={
+                  {
+                    // width:'30%'
+                  }
+                }>
+                <TouchableOpacity
+                  onPress={() => handleStudentSelection(student._id)}>
+                  {!courseData.students.includes(student._id) ? (
+                    <Text
+                      style={{
+                        ...FONTS.h3,
+                        color: COLORS.green,
+                        textTransform: 'capitalize',
+                      }}>
+                      Add
+                    </Text>
+                  ) : (
+                    //  <Icon name={'add'} size={30} color={COLORS.green} />
+                    <Text
+                      style={{
+                        ...FONTS.h3,
+                        color: COLORS.red,
+                        textTransform: 'capitalize',
+                      }}>
+                      Remove
+                    </Text>
+                    // <Icon name={'delete'} size={30} color={COLORS.red} />
+                  )}
+                </TouchableOpacity>
+                {/* <Button
             title={courseData.students.includes(student._id) ? 'Remove' : 'Add'}
             onPress={() => handleStudentSelection(student._id)}
           /> */}
-                </View>
               </View>
-            ))}
-          </ScrollView>
-        </View>
+            </View>
+          ))}
+        </ScrollView>
+        {/* </View> */}
         {/* Add more input fields for other properties if needed */}
 
         {/* <Button title="Create Course" onPress={handleCreateCourse} /> */}
@@ -789,13 +846,20 @@ export const CreateCourseScreen = ({navigation}) => {
               gap: 20,
             }}
             onPress={handleCreateCourse}>
-            <Icon name={'add'} size={30} color={COLORS.white} />
+            <Text
+              style={{
+                ...FONTS.h3,
+                color: COLORS.white,
+                fontWeight: 900,
+              }}>
+              {/* ➕ */}＋
+            </Text>
             <Text
               style={{
                 ...FONTS.h3,
                 color: COLORS.white,
                 fontWeight: 700,
-                letterSpacing: 1,
+                letterSpacing: 2,
               }}>
               Create Course
             </Text>
@@ -816,7 +880,7 @@ export const CourseDetails = ({route, navigation}) => {
   const [studentID, setStudentID] = useState([]);
   const [open, setOpen] = useState(false);
   const [DropOpen, setDropOpen] = useState(false);
-
+  const [studData, setStudData] = useState([]);
   useEffect(() => {
     const fetcheCourse = async () => {
       try {
@@ -826,7 +890,8 @@ export const CourseDetails = ({route, navigation}) => {
         // console.log('Id ', Id);
         setData(responce.data);
         setStudentID(Id);
-        setLoading(false);
+        setRefresh(true);
+        // setLoading(false);
       } catch (error) {
         console.log('error fetching course ', error);
       }
@@ -838,6 +903,7 @@ export const CourseDetails = ({route, navigation}) => {
           stud => !studentID.includes(stud._id),
         );
         setStudData(newdata);
+        // setRefresh(prevRefresh => !prevRefresh);
         console.log('geting all student data ::: ', newdata);
       } catch (error) {
         error =>
@@ -848,8 +914,18 @@ export const CourseDetails = ({route, navigation}) => {
       }
     };
 
-    fetcheCourse();
-    fetchallStudnet();
+    // fetcheCourse();
+    // fetchallStudnet();
+
+    const loadData = async () => {
+      await fetcheCourse();
+      await fetchallStudnet();
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000); // wait for 5 seconds before setting loading to false
+    };
+
+    loadData();
   }, [refresh]);
 
   // useEffect(() => {
@@ -920,10 +996,8 @@ export const CourseDetails = ({route, navigation}) => {
       );
   };
 
-  const [studData, setStudData] = useState([]);
-  const course = useMemo(() => data, [data]);
-  const student = useMemo(() => studData, [studData]);
-
+  const course = useMemo(() => data, [data, refresh]);
+  const student = useMemo(() => studData, [studData, refresh]);
   return (
     <>
       <ScrollView>
@@ -962,8 +1036,6 @@ export const CourseDetails = ({route, navigation}) => {
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        // justifyContent:
-                        // alignItems: 'center',
                         gap: 10,
                         width: '85%',
                       }}>
@@ -1122,7 +1194,7 @@ export const CourseDetails = ({route, navigation}) => {
                         </View>
                       </>
                       <>
-                        {student.length < 1 ? (
+                        {studData.length < 1 ? (
                           <>
                             <Text
                               style={{
@@ -1337,6 +1409,7 @@ export const CreateNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [notificationText, setNotificationText] = useState('');
   const [expiration, setExpiration] = useState('');
+  const [refresh, setRefresh] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
     fetchNotifications();
@@ -1391,7 +1464,7 @@ export const CreateNotifications = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <TextHeader title={'Notification'} />
+          {/* <TextHeader title={'Notification'} /> */}
         </View>
         <>
           <View>
@@ -1415,40 +1488,49 @@ export const CreateNotifications = () => {
               <></>
             )}
 
-            {notifications.map((item, i) => (
-              <>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    // justifyContent: 's',
-                    alignItems: 'center',
-                    marginBottom: 8,
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    padding: 14,
-                    borderRadius: 8,
-                    paddingHorizontal: 15,
-                  }}
-                  key={item._id}>
-                  <Text
+            <ScrollView
+              style={{
+                height: '95%',
+                backgroundColor: COLORS.lightGray1,
+                padding: 10,
+                borderRadius: 10,
+              }}>
+              {notifications.map((item, i) => (
+                <>
+                  <View
                     style={{
-                      ...FONTS.h2,
-                      color: COLORS.black,
-                    }}>
-                    {i + 1}
-                    {' '}
-                  </Text>
+                      flexDirection: 'row',
+                      // justifyContent: 's',
+                      alignItems: 'center',
+                      marginBottom: 8,
+                      borderWidth: 1,
+                      borderColor: COLORS.Primary,
+                      padding: 14,
+                      borderRadius: 8,
+                      paddingHorizontal: 15,
+                    }}
+                    key={item._id}>
+                    <Text
+                      key={i}
+                      style={{
+                        ...FONTS.h2,
+                        color: COLORS.black,
+                      }}>
+                      {i + 1}
+                      {' '}
+                    </Text>
 
-                  <Text
-                    style={{
-                      ...FONTS.h2,
-                      color: COLORS.black,
-                    }}>
-                    {item.text}
-                  </Text>
-                </View>
-              </>
-            ))}
+                    <Text
+                      style={{
+                        ...FONTS.h2,
+                        color: COLORS.black,
+                      }}>
+                      {item.text}
+                    </Text>
+                  </View>
+                </>
+              ))}
+            </ScrollView>
           </View>
         </>
       </View>

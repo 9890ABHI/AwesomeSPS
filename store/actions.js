@@ -112,16 +112,19 @@ export const logoutUser = () => dispatch => {
 //   }
 // };
 // AWS backend link
-export const BASEURL = 'http://54.208.54.151:3000/';
-// export const BASEURL = 'https://sps-backend-production.up.railway.app/';
+// export const BASEURL = 'http://54.208.54.151:3000/';
+export const BASEURL = 'https://sps-backend-production.up.railway.app/';
 
 // export const BASEURL = 'http://192.168.105.170:3001/';
 
 console.log('hell yeam');
 
 axios
-  .get('http://54.208.54.151:3000/')
-  // .get('https://sps-backend-production.up.railway.app/') // Ensure the URL matches your backend server
+  // .get('http://54.208.54.151:3000/')
+  .get('https://sps-backend-production.up.railway.app/') // Ensure the URL matches your backend server
   // .get('https://sps-backend-x5fl.onrender.com') // Ensure the URL matches your backend server
-  .then(response => console.log('hell problem solve'))
+  .then(response => {
+    // Alert.alert('hell problem solve', BASEURL);
+    console.log('hell problem solve');
+  })
   .catch(error => console.error('yo', error));

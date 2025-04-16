@@ -27,9 +27,9 @@ export const Student = ({navigation}) => {
   const dispatch = useDispatch();
 
   const [studentData, setStudentData] = useState({
-    name: user.name,
-    mobile: user.mobile,
-    email: user.email,
+    name: user?.name,
+    mobile: user?.mobile,
+    email: user?.email,
   });
 
   const handleChange = (field, value) => {
@@ -37,10 +37,10 @@ export const Student = ({navigation}) => {
   };
 
   const updateStudentInformation = async () => {
-    const StudentEmail = user.email; // Replace with the actual teacher's email
+    const StudentEmail = user?.email; // Replace with the actual teacher's email
     const updatedData = {
-      name: studentData.name,
-      mobile: studentData.mobile,
+      name: studentData?.name,
+      mobile: studentData?.mobile,
       // email:studentData.email
     };
 
@@ -469,7 +469,7 @@ export const TimeTable = ({navigation}) => {
           }
         }
       /> */}
-      <View
+      {/* <View
         style={{
           margin: 10,
           // padding: 10,
@@ -478,58 +478,170 @@ export const TimeTable = ({navigation}) => {
         }}>
         <FlatList
           data={TimeTableData}
+          keyExtractor={(item, index) =>
+            item.id?.toString() || index.toString()
+          }
           renderItem={({item}) => (
-            <>
-              <View
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                // flexWrap: 'nowrap',
+                paddingVertical: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderBottomColor: '#000',
+                borderBottomWidth: 0.5,
+                paddingHorizontal: 20,
+                gap: 5,
+              }}>
+              <Text
                 style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  // flexWrap: 'nowrap',
-                  paddingVertical: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderBottomColor: '#000',
-                  borderBottomWidth: 0.5,
-                  paddingHorizontal: 20,
-                  gap: 5,
+                  width: '25%',
+                  fontSize: 18,
                 }}>
-                <Text
-                  style={{
-                    width: '25%',
-                    fontSize: 18,
-                  }}>
-                  {item.title.slice(0, 3)}
-                </Text>
-                <Text
-                  style={{
-                    width: '25%',
-                    fontSize: 15,
-                    color: '#000',
-                  }}>
-                  : {item.firstPeriod}
-                </Text>
-                <Text
-                  style={{
-                    width: '25%',
-                    fontSize: 15,
-                    color: '#000',
-                  }}>
-                  {item.secondPeriod}
-                </Text>
-                <Text
-                  style={{
-                    width: '25%',
-                    fontSize: 15,
-                    color: '#000',
-                  }}>
-                  {item.thirdPeriod}
-                </Text>
-              </View>
-            </>
+                {item.title.slice(0, 3)}
+              </Text>
+              <Text
+                style={{
+                  width: '25%',
+                  fontSize: 15,
+                  color: '#000',
+                }}>
+                : {item.firstPeriod}
+              </Text>
+              <Text
+                style={{
+                  width: '25%',
+                  fontSize: 15,
+                  color: '#000',
+                }}>
+                {item.secondPeriod}
+              </Text>
+              <Text
+                style={{
+                  width: '25%',
+                  fontSize: 15,
+                  color: '#000',
+                }}>
+                {item.thirdPeriod}
+              </Text>
+            </View>
           )}
         />
-      </View>
+      </View> */}
+      {/*  */}
+      {/* <View
+        style={{
+          margin: 10,
+          backgroundColor: COLORS.white,
+          borderRadius: 10,
+        }}>
+        <FlatList
+          data={TimeTableData}
+          keyExtractor={(item, index) =>
+            item?.id?.toString() || index.toString()
+          }
+          renderItem={({item}) => (
+            <View
+              style={{
+                flexDirection: 'row',
+                paddingVertical: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderBottomColor: '#000',
+                borderBottomWidth: 0.5,
+                paddingHorizontal: 20,
+              }}>
+              <Text
+                style={{
+                  width: '25%',
+                  fontSize: 18,
+                }}>
+                {item?.title?.slice(0, 3) || ''}
+              </Text>
+              <Text
+                style={{
+                  width: '25%',
+                  fontSize: 15,
+                  color: '#000',
+                }}>
+                : {item?.firstPeriod || ''}
+              </Text>
+              <Text
+                style={{
+                  width: '25%',
+                  fontSize: 15,
+                  color: '#000',
+                }}>
+                {item?.secondPeriod || ''}
+              </Text>
+              <Text
+                style={{
+                  width: '25%',
+                  fontSize: 15,
+                  color: '#000',
+                }}>
+                {item?.thirdPeriod || ''}
+              </Text>
+            </View>
+          )}
+        />
+      </View> */}
+      <ScrollView
+        style={{
+          margin: 10,
+          backgroundColor: COLORS.white,
+          borderRadius: 10,
+        }}>
+        {TimeTableData.map((item, index) => (
+          <View
+            key={item?.id?.toString() || index.toString()}
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderBottomColor: '#000',
+              borderBottomWidth: 0.5,
+              paddingHorizontal: 20,
+            }}>
+            <Text
+              style={{
+                width: '25%',
+                fontSize: 18,
+              }}>
+              {item?.title?.slice(0, 3) || ''}
+            </Text>
+            <Text
+              style={{
+                width: '25%',
+                fontSize: 15,
+                color: '#000',
+              }}>
+              : {item?.firstPeriod || ''}
+            </Text>
+            <Text
+              style={{
+                width: '25%',
+                fontSize: 15,
+                color: '#000',
+              }}>
+              {item?.secondPeriod || ''}
+            </Text>
+            <Text
+              style={{
+                width: '25%',
+                fontSize: 15,
+                color: '#000',
+              }}>
+              {item?.thirdPeriod || ''}
+            </Text>
+          </View>
+        ))}
+      </ScrollView>
 
+      {/*  */}
       <View>
         <Button
           title="Attendance"
@@ -604,7 +716,7 @@ export const Notifications = ({navigation}) => {
               </View>
             </>
           )}
-          <FlatList
+          {/* <FlatList
             data={notifications}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => (
@@ -628,7 +740,31 @@ export const Notifications = ({navigation}) => {
                 </Text>
               </View>
             )}
-          />
+          /> */}
+          <ScrollView>
+            {notifications.map((item, index) => (
+              <View
+                key={index.toString()}
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  marginBottom: 8,
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  padding: 14,
+                  borderRadius: 8,
+                  paddingHorizontal: 15,
+                }}>
+                <Text
+                  style={{
+                    ...FONTS.h2,
+                    color: COLORS.black,
+                  }}>
+                  {item.text}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
       </>
     </View>
@@ -869,7 +1005,7 @@ export const Calculator = () => {
               </Text>
             </View>
           )}
-          <FlatList
+          {/* <FlatList
             data={courses}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => (
@@ -900,7 +1036,37 @@ export const Calculator = () => {
                 </Text>
               </View>
             )}
-          />
+          /> */}
+          <ScrollView>
+            {courses.map((item, index) => (
+              <View key={index.toString()} style={styles.courseItem}>
+                <Text
+                  style={{
+                    ...FONTS.body3,
+                    color: COLORS.black,
+                    textTransform: 'uppercase',
+                  }}>
+                  {index + 1}
+                </Text>
+                <Text
+                  style={{
+                    ...FONTS.body3,
+                    color: COLORS.black,
+                    textTransform: 'uppercase',
+                  }}>
+                  {item.courseName}
+                </Text>
+                <Text
+                  style={{
+                    ...FONTS.body3,
+                    color: COLORS.black,
+                    textTransform: 'uppercase',
+                  }}>
+                  {item.grade}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
       </View>
       <View
@@ -994,7 +1160,7 @@ export const Lectures = ({navigation}) => {
             <TextHeader title={'Lectures'} key={''} />
           </View>
 
-          <View>
+          {/* <View>
             <FlatList
               data={DataImage}
               style={{
@@ -1070,7 +1236,82 @@ export const Lectures = ({navigation}) => {
                 </View>
               )}
             />
-          </View>
+          </View> */}
+          <ScrollView
+            contentContainerStyle={{
+              gap: 20,
+              paddingBottom: 20,
+            }}>
+            {DataImage.map((item, index) => (
+              <View
+                key={index.toString()}
+                style={{
+                  paddingVertical: 10,
+                }}>
+                <TouchableOpacity
+                  style={{
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                    backgroundColor: COLORS.white,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      padding: 0,
+                      height: 200,
+                      position: 'relative',
+                    }}>
+                    <Image
+                      source={{
+                        uri: item.image_link,
+                      }}
+                      alt=""
+                      style={{
+                        height: '100%',
+                        borderRadius: 14,
+                        resizeMode: 'contain', // use resizeMode instead of objectFit
+                        width: '100%',
+                      }}
+                    />
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Image
+                        source={{
+                          uri: 'https://cdn-icons-png.freepik.com/256/7826/7826802.png?ga=GA1.2.1634828664.1699686714&',
+                        }}
+                        alt=""
+                        style={{
+                          width: 70,
+                          height: 70,
+                          borderRadius: 0,
+                          shadowOpacity: 3,
+                          shadowColor: COLORS.PrimaryBlue,
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <Text
+                    style={{
+                      ...FONTS.h3,
+                      color: COLORS.black,
+                      fontWeight: '700',
+                      paddingHorizontal: 10,
+                    }}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
         </View>
       </ScrollView>
     </>
